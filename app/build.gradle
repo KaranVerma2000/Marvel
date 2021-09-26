@@ -5,6 +5,9 @@ plugins {
     id 'androidx.navigation.safeargs'
 }
 
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
@@ -17,6 +20,10 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "PRIVATE_KEY", "\"" + localProperties['privateKey'] + "\"")
+        buildConfigField("String", "API_KEY", "\"" + localProperties['apiKey'] + "\"")
+
     }
 
     buildTypes {
@@ -58,5 +65,16 @@ dependencies {
     //retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.7.1'
+
+
+    //coroutine
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2'
+
+    //glide
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+
+    //viewmodels
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
 
 }
