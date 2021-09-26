@@ -1,6 +1,8 @@
 package com.example.marvel.utils
 
+import android.content.Context
 import android.util.Log
+import android.view.inputmethod.InputMethodManager
 import com.example.marvel.model.Thumbnail
 import com.example.marvel.model.Wrapper
 import retrofit2.Response
@@ -13,7 +15,7 @@ const val md5hash = "hash"
 const val timestamp = "ts"
 const val resource_type = "/portrait_fantastic"
 const val order_by = "orderBy"
-const val searchedName = "nameStartsWith"
+const val nameSearched = "nameStartsWith"
 
 
 fun md5Hash(input: String): String {
@@ -25,4 +27,10 @@ fun getTs() = (System.currentTimeMillis() / 1000).toString()
 
 fun Thumbnail.toUrl(): String {
     return this.path + resource_type + "." + this.extension
+}
+
+fun Context.hideKeyboard() {
+    val inputMethodManager: InputMethodManager =
+        this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_NOT_ALWAYS, 0)
 }

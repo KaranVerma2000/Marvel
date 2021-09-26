@@ -3,6 +3,7 @@ package com.example.marvel.network
 import com.example.marvel.model.Characters
 import com.example.marvel.model.Wrapper
 import com.example.marvel.utils.md5hash
+import com.example.marvel.utils.nameSearched
 import com.example.marvel.utils.publicKey
 import com.example.marvel.utils.timestamp
 import retrofit2.Response
@@ -25,8 +26,8 @@ interface MarvelAPI {
         @Query(publicKey) apiKey: String,
         @Query(md5hash) hash: String,
         @Query(timestamp) ts: String,
-        @Query( ) name: String,
-        @Query(resultOffset) offset: Int,
-        @Query(resultLimit) limit: Int = character_page_size
-    )
+        @Query(nameSearched) name: String,
+//        @Query("offset") offset: Int,
+        @Query("limit") limit: Int = 20
+    ) : Response<Wrapper<Characters>>
 }

@@ -18,7 +18,10 @@ class MarvelViewModel : ViewModel() {
     private val _characters = MutableLiveData<ApiException<ArrayList<Characters>>>()
     val characters: LiveData<ApiException<ArrayList<Characters>>> = _characters
 
-    fun loadCharacters() {
+    private val _charactersName = MutableLiveData<ApiException<ArrayList<Characters>>>()
+    val charactersName: LiveData<ApiException<ArrayList<Characters>>> = _charactersName
+
+    fun getCharacters() {
         _characters.postValue(ApiException.Loading())
         viewModelScope.launch {
             try {
@@ -36,4 +39,23 @@ class MarvelViewModel : ViewModel() {
         Log.d("TAG", list.toString())
         _characters.postValue(ApiException.Success(list))
     }
+
+    fun getNameCharacters(name: String) {
+        _characters.postValue(ApiException.Loading())
+        viewModelScope.launch {
+            try {
+                val result = repository.getNameCharacters(name)
+                handleCharacters(result)
+            } catch (e: Exception) {
+                Log.d("CharacterResultSearch", e.message.toString())
+                _characters.postValue(ApiException.Error(e.message.toString()))
+            }
+        }
+    }
+
+//    private fun handleNameCharacters(result: Wrapper<Characters>) {
+//        val list = result.data.results
+//        Log.d("TAG", list.toString())
+//        _characters.postValue(ApiException.Success(list))
+//    }
 }

@@ -21,5 +21,10 @@ class MarvelRepository : SafeApiRequest() {
         return apiRequest { retrofit.getCharacters(BuildConfig.API_KEY, hash, ts) }
     }
 
+    suspend fun getNameCharacters(name: String): Wrapper<Characters> {
+        val ts = getTs()
+        val hash = md5Hash(ts + BuildConfig.PRIVATE_KEY + BuildConfig.API_KEY)
+        return apiRequest { retrofit.getNameCharacters(BuildConfig.API_KEY, hash, ts, name) }
+    }
 
 }
