@@ -30,10 +30,11 @@
                 android:textStyle="normal" />
 
             <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/filterBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_sliders"
-                android:layout_marginEnd="15dp"
+                android:layout_marginEnd="25dp"
                 android:tint="@color/black"/>
 
 
@@ -42,7 +43,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/characterRV"
+        android:id="@+id/comicsRV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/card1"

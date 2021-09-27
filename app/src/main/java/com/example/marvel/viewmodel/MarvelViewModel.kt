@@ -6,26 +6,39 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.marvel.model.Characters
+import com.example.marvel.model.Comics
 import com.example.marvel.model.Wrapper
 import com.example.marvel.repository.MarvelRepository
-import com.example.marvel.utils.ApiException
+import com.example.marvel.utils.*
 import kotlinx.coroutines.launch
 
-class MarvelViewModel : ViewModel() {
+class MarvelViewModel() : ViewModel() {
 
     private val repository = MarvelRepository()
 
-    private val _characters = MutableLiveData<ApiException<ArrayList<Characters>>>()
+    val _characters = MutableLiveData<ApiException<ArrayList<Characters>>>()
     val characters: LiveData<ApiException<ArrayList<Characters>>> = _characters
 
     private val _charactersName = MutableLiveData<ApiException<ArrayList<Characters>>>()
     val charactersName: LiveData<ApiException<ArrayList<Characters>>> = _charactersName
 
+    private val _comics = MutableLiveData<ApiException<ArrayList<Comics>>>()
+    val comics: LiveData<ApiException<ArrayList<Comics>>> = _comics
+
+    var initialCharacterlist: ArrayList<Characters> = arrayListOf()
+    var changeCharacterlist: ArrayList<Characters> = arrayListOf()
+    var initialComicList: ArrayList<Comics> = arrayListOf()
+    var filteredComicList: ArrayList<Comics> = arrayListOf()
+    var filter: Int = All
+    var search: Boolean = false
+
+
     fun getCharacters() {
         _characters.postValue(ApiException.Loading())
         viewModelScope.launch {
             try {
-                val result = repository.getCharacters()
+                Log.d("size", initialCharacterlist.size.toString())
+                val result = repository.getCharacters(initialCharacterlist.size)
                 handleCharacters(result)
             } catch (e: Exception) {
                 Log.d("CharacterResult", e.message.toString())
@@ -35,17 +48,18 @@ class MarvelViewModel : ViewModel() {
     }
 
     private fun handleCharacters(result: Wrapper<Characters>) {
-        val list = result.data.results
-        Log.d("TAG", list.toString())
-        _characters.postValue(ApiException.Success(list))
+        initialCharacterlist.addAll(result.data.results)
+        Log.d("TAG", initialCharacterlist.toString())
+        _characters.postValue(ApiException.Success(initialCharacterlist))
     }
 
     fun getNameCharacters(name: String) {
         _characters.postValue(ApiException.Loading())
         viewModelScope.launch {
             try {
-                val result = repository.getNameCharacters(name)
-                handleCharacters(result)
+                Log.d("search size", initialCharacterlist.size.toString())
+                val result = repository.getNameCharacters(changeCharacterlist.size, name)
+                handleCharactersName(result)
             } catch (e: Exception) {
                 Log.d("CharacterResultSearch", e.message.toString())
                 _characters.postValue(ApiException.Error(e.message.toString()))
@@ -53,9 +67,77 @@ class MarvelViewModel : ViewModel() {
         }
     }
 
+    private fun handleCharactersName(result: Wrapper<Characters>) {
+        val list = result.data.results
+        if (search) {
+            changeCharacterlist.clear()
+        }
+        changeCharacterlist.addAll(list)
+        Log.d("TAG", list.toString())
+        _characters.postValue(ApiException.Success(changeCharacterlist))
+    }
+
+    fun getComics() {
+        _comics.postValue(ApiException.Loading())
+        viewModelScope.launch {
+            try {
+                val result = repository.getComics()
+                handleComics(result)
+            } catch (e: Exception) {
+                Log.d("ComicResult", e.message.toString())
+                _comics.postValue(ApiException.Error(e.message.toString()))
+            }
+        }
+    }
+
+    private fun handleComics(result: Wrapper<Comics>) {
+        val list = result.data.results
+        initialComicList.clear()
+        initialComicList.addAll(list)
+        Log.d("Comics ", list.toString())
+        _comics.postValue(ApiException.Success(list))
+    }
+
 //    private fun handleNameCharacters(result: Wrapper<Characters>) {
 //        val list = result.data.results
 //        Log.d("TAG", list.toString())
 //        _characters.postValue(ApiException.Success(list))
 //    }
+
+    fun filterComics(type: Int) {
+        filter = type
+        when (type) {
+            All -> {
+                _comics.postValue(ApiException.Success(initialComicList))
+                return
+            }
+            THIS_WEEK -> {
+                filteredComicList.clear()
+                for (i in initialComicList)
+                    if (inThisWeek(i.getDate()))
+                        filteredComicList.add(i)
+            }
+            LAST_WEEK -> {
+                filteredComicList.clear()
+                for (i in initialComicList)
+                    if (inLastWeek(i.getDate()))
+                        filteredComicList.add(i)
+            }
+            NEXT_WEEK -> {
+                filteredComicList.clear()
+                for (i in initialComicList)
+                    if (inNextWeek(i.getDate()))
+                        filteredComicList.add(i)
+            }
+            THIS_MONTH -> {
+                filteredComicList.clear()
+                for (i in initialComicList)
+                    if (inThisMonth(i.getDate()))
+                        filteredComicList.add(i)
+            }
+        }
+        _comics.postValue(ApiException.Success(filteredComicList))
+    }
+
+
 }

@@ -1,11 +1,9 @@
 package com.example.marvel.network
 
 import com.example.marvel.model.Characters
+import com.example.marvel.model.Comics
 import com.example.marvel.model.Wrapper
-import com.example.marvel.utils.md5hash
-import com.example.marvel.utils.nameSearched
-import com.example.marvel.utils.publicKey
-import com.example.marvel.utils.timestamp
+import com.example.marvel.utils.*
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -17,8 +15,8 @@ interface MarvelAPI {
         @Query(publicKey) apiKey: String,
         @Query(md5hash) hash: String,
         @Query(timestamp) ts: String,
-//        @Query("offset") offset: Int,
-        @Query("limit") limit: Int = 20
+        @Query("offset") offset: Int,
+        @Query("limit") limit: Int = 10
     ): Response<Wrapper<Characters>>
 
     @GET("characters")
@@ -27,7 +25,17 @@ interface MarvelAPI {
         @Query(md5hash) hash: String,
         @Query(timestamp) ts: String,
         @Query(nameSearched) name: String,
-//        @Query("offset") offset: Int,
-        @Query("limit") limit: Int = 20
-    ) : Response<Wrapper<Characters>>
+        @Query("offset") offset: Int,
+        @Query("limit") limit: Int = 10
+    ): Response<Wrapper<Characters>>
+
+    @GET("comics")
+    suspend fun getComics(
+        @Query(publicKey) apiKey: String,
+        @Query(md5hash) hash: String,
+        @Query(timestamp) ts: String,
+        @Query("limit") limit: Int = 40,
+        @Query("offset") offset: Int = 90,
+        @Query("orderBy") orderBy: String = comic_order_by
+    ): Response<Wrapper<Comics>>
 }
