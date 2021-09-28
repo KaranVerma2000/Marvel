@@ -46,11 +46,21 @@
         android:id="@+id/comicsRV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/gif"
         android:layout_below="@+id/card1"
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="20dp"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="2"
         tools:listitem="@layout/recycler_item_view" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/gif"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="10dp"
+        android:visibility="visible" />
 
 </RelativeLayout>

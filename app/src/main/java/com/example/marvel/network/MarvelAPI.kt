@@ -35,7 +35,7 @@ interface MarvelAPI {
         @Query(md5hash) hash: String,
         @Query(timestamp) ts: String,
         @Query("limit") limit: Int = 40,
-        @Query("offset") offset: Int = 90,
+        @Query("offset") offset: Int = 220,
         @Query("orderBy") orderBy: String = comic_order_by
     ): Response<Wrapper<Comics>>
 }

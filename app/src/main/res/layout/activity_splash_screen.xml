@@ -1,9 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/red"
     tools:context=".ui.SplashScreenActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="MARVEL"
+        android:fontFamily="@font/marvel"
+        android:textColor="@color/white"
+        android:textSize="35sp"/>
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="wrap_content"
+        android:layout_height="2dp"
+        android:layout_below="@id/text"
+        android:layout_toStartOf="@+id/text"
+        android:layout_toEndOf="@+id/text"
+        android:layout_marginTop="2dp"
+        android:background="@color/white"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/text2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="STUDIOS"
+        android:fontFamily="serif"
+        android:textSize="16dp"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:layout_below="@+id/view1"
+        android:layout_toStartOf="@+id/view1"
+        android:layout_toEndOf="@+id/view1"/>
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="wrap_content"
+        android:layout_height="2dp"
+        android:layout_below="@id/text2"
+        android:layout_toStartOf="@+id/text"
+        android:layout_toEndOf="@+id/text"
+        android:layout_marginTop="2dp"
+        android:background="@color/white"/>
+
+</RelativeLayout>

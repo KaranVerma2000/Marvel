@@ -15,6 +15,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.marvel.R
 import com.example.marvel.adapters.CharacterAdapter
 import com.example.marvel.databinding.FragmentCharacterBinding
 import com.example.marvel.model.Characters
@@ -52,9 +54,13 @@ class CharacterFragment : Fragment() {
         viewModel.characters.observe(viewLifecycleOwner, {
             when (it) {
                 is ApiException.Success -> {
+                    binding.gif.visibility = View.GONE
                     Log.d("live data character", it.value.toString())
-                    if (list.size == it.value.size) {
+                    Log.d("list size", list.size.toString())
+                    Log.d("livedata size", it.value.size.toString())
+                    if (viewModel.isAllLoaded) {
                         isLastPage = true
+                        return@observe
                     }
                     list.clear()
                     list.addAll(it.value)
@@ -62,9 +68,12 @@ class CharacterFragment : Fragment() {
                     isLoading = false
                 }
                 is ApiException.Loading -> {
+                    binding.gif.visibility = View.VISIBLE
+                    Glide.with(binding.root).load(R.raw.loading).into(binding.gif)
                     isLoading = true
                 }
                 is ApiException.Error -> {
+                    binding.gif.visibility = View.GONE
                     Toast.makeText(requireContext(), it.message.toString(), Toast.LENGTH_SHORT)
                         .show()
                 }
@@ -98,6 +107,9 @@ class CharacterFragment : Fragment() {
                 if (binding.etSearch.text.toString().isNotEmpty()) {
                     Log.d("Search", binding.etSearch.text.toString())
                     viewModel.search = true
+                    isLoading = false
+                    isLastPage = false
+                    viewModel.isAllLoaded = false
                     viewModel.changeCharacterlist.clear()
                     viewModel.nameSearch = binding.etSearch.text.toString()
                     viewModel.getNameCharacters(binding.etSearch.text.toString())
@@ -141,6 +153,12 @@ class CharacterFragment : Fragment() {
             val isNotAtBeginning = firstVisibleItemPosition >= 0
             val paginate =
                 isNotLoadingAndNotLastPage && lastItem && isNotAtBeginning && isScrolling
+
+            Log.d("Loading", "${isLoading}")
+            Log.d("last page", "${isLastPage}")
+            Log.d("last item", "$lastItem")
+            Log.d("not begin", "$isNotAtBeginning")
+            Log.d("is scroll", "$isScrolling")
 
             if (paginate) {
                 if (viewModel.search) {

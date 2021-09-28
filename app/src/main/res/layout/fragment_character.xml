@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.CharacterFragment">
 
     <androidx.cardview.widget.CardView
@@ -15,24 +15,24 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/characters"
-            android:textSize="35sp"
-            android:textColor="@color/red"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="15dp"
             android:fontFamily="@font/marvel"
-            android:textStyle="normal"/>
+            android:text="@string/characters"
+            android:textColor="@color/red"
+            android:textSize="35sp"
+            android:textStyle="normal" />
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="20dp"
-        android:elevation="10dp"
         android:layout_below="@+id/card1"
         android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="15dp">
+        android:layout_marginTop="15dp"
+        android:elevation="10dp"
+        app:cardCornerRadius="20dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -45,14 +45,14 @@
                 android:background="@drawable/search_curve_background"
                 android:drawableStart="@drawable/ic_baseline_search"
                 android:drawablePadding="16dp"
-                android:hint="Search Characters Here !"
                 android:fontFamily="@font/marvel"
+                android:hint="Search Characters Here !"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:padding="8dp"
                 android:paddingStart="16dp"
                 android:textCursorDrawable="@color/red"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
 
             <ImageView
                 android:id="@+id/iv_cancel_search"
@@ -73,11 +73,21 @@
         android:id="@+id/characterRV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/gif"
         android:layout_below="@+id/card"
+        android:layout_marginHorizontal="20dp"
         android:layout_marginTop="20dp"
-        tools:listitem="@layout/recycler_item_view"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="2"
-        android:layout_marginHorizontal="20dp"/>
+        tools:listitem="@layout/recycler_item_view" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/gif"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="10dp"
+        android:visibility="visible" />
 
 </RelativeLayout>

@@ -25,6 +25,8 @@ class MarvelViewModel() : ViewModel() {
     private val _comics = MutableLiveData<ApiException<ArrayList<Comics>>>()
     val comics: LiveData<ApiException<ArrayList<Comics>>> = _comics
 
+    var isAllLoaded : Boolean = false
+
     var initialCharacterlist: ArrayList<Characters> = arrayListOf()
     var changeCharacterlist: ArrayList<Characters> = arrayListOf()
     var initialComicList: ArrayList<Comics> = arrayListOf()
@@ -49,12 +51,16 @@ class MarvelViewModel() : ViewModel() {
     }
 
     private fun handleCharacters(result: Wrapper<Characters>) {
+        if (result.data.results.size == 0){
+            isAllLoaded = true
+        }
         initialCharacterlist.addAll(result.data.results)
         Log.d("TAG", initialCharacterlist.toString())
         _characters.postValue(ApiException.Success(initialCharacterlist))
     }
 
     fun getNameCharacters(name: String) {
+//        _characters.postValue(ApiException.Success(arrayListOf()))
         _characters.postValue(ApiException.Loading())
         viewModelScope.launch {
             try {
@@ -70,6 +76,9 @@ class MarvelViewModel() : ViewModel() {
 
     private fun handleCharactersName(result: Wrapper<Characters>) {
         val list = result.data.results
+        if (result.data.results.size == 0){
+            isAllLoaded = true
+        }
         changeCharacterlist.addAll(list)
         Log.d(
             "TAG", "${changeCharacterlist.size} ${list.toString()}"
@@ -106,6 +115,7 @@ class MarvelViewModel() : ViewModel() {
 
     fun filterComics(type: Int) {
         filter = type
+        Log.d("filter", type.toString())
         when (type) {
             All -> {
                 _comics.postValue(ApiException.Success(initialComicList))

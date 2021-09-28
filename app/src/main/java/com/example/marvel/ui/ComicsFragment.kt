@@ -10,6 +10,7 @@ import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import com.bumptech.glide.Glide
 import com.example.marvel.R
 import com.example.marvel.adapters.ComicsAdapter
 import com.example.marvel.databinding.FragmentComicsBinding
@@ -47,10 +48,6 @@ class ComicsFragment : Fragment() {
     }
 
     private fun sortByFilter() {
-        val thisWeektxt = filter.findViewById<TextView>(R.id.thisWeek)
-        val lastWeektxt = filter.findViewById<TextView>(R.id.lastWeek)
-        val nextWeektxt = filter.findViewById<TextView>(R.id.nextWeek)
-        val lastMonthtxt = filter.findViewById<TextView>(R.id.lastMonth)
         val lastMonthCard = filter.findViewById<CardView>(R.id.lastMonthCard)
         val lastWeekCard = filter.findViewById<CardView>(R.id.lastWeekCard)
         val thisWeekCard = filter.findViewById<CardView>(R.id.thisWeekCard)
@@ -147,12 +144,15 @@ class ComicsFragment : Fragment() {
         viewModel.comics.observe(viewLifecycleOwner, {
             when (it) {
                 is ApiException.Success -> {
+                    binding.gif.visibility = View.GONE
                     comicsAdapter.getList(it.value)
                 }
                 is ApiException.Loading -> {
-
+                    binding.gif.visibility = View.VISIBLE
+                    Glide.with(binding.root).load(R.raw.loading).into(binding.gif)
                 }
                 is ApiException.Error -> {
+                    binding.gif.visibility = View.GONE
                     Snackbar.make(binding.root, it.message.toString(), 1000).show()
                 }
             }
