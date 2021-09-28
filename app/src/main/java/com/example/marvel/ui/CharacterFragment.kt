@@ -73,10 +73,8 @@ class CharacterFragment : Fragment() {
     }
 
     private fun initUI() {
-        if (viewModel.characters.value == null) {
-            Log.d("viewmodel", "viewmodel null")
-            viewModel.getCharacters()
-        }
+
+        viewModel.getCharacters()
         characterAdapter = CharacterAdapter()
         binding.characterRV.apply {
             layoutManager = GridLayoutManager(requireContext(), 2)
@@ -87,7 +85,9 @@ class CharacterFragment : Fragment() {
         binding.ivCancelSearch.setOnClickListener {
             binding.etSearch.setText("")
             viewModel.search = false
+            viewModel.nameSearch = ""
             viewModel.getCharacters()
+            binding.characterRV.smoothScrollToPosition(0)
             requireContext().hideKeyboard()
         }
 
@@ -98,6 +98,8 @@ class CharacterFragment : Fragment() {
                 if (binding.etSearch.text.toString().isNotEmpty()) {
                     Log.d("Search", binding.etSearch.text.toString())
                     viewModel.search = true
+                    viewModel.changeCharacterlist.clear()
+                    viewModel.nameSearch = binding.etSearch.text.toString()
                     viewModel.getNameCharacters(binding.etSearch.text.toString())
                     requireContext().hideKeyboard()
                 }
@@ -141,8 +143,15 @@ class CharacterFragment : Fragment() {
                 isNotLoadingAndNotLastPage && lastItem && isNotAtBeginning && isScrolling
 
             if (paginate) {
-                viewModel.getCharacters()
+                if (viewModel.search) {
+                    Log.d("paginate", viewModel.search.toString())
+                    viewModel.getNameCharacters(viewModel.nameSearch)
+                } else {
+                    Log.d("paginate", viewModel.search.toString())
+                    viewModel.getCharacters()
+                }
                 isScrolling = false
+                Log.d("Scrolling", isScrolling.toString())
             }
         }
 
@@ -150,6 +159,7 @@ class CharacterFragment : Fragment() {
             super.onScrollStateChanged(recyclerView, newState)
             if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
                 isScrolling = true
+                Log.d("Scrolling", isScrolling.toString())
             }
         }
     }
@@ -157,6 +167,8 @@ class CharacterFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         Log.d("char", "destroy")
+        viewModel.search = false
+        viewModel.nameSearch = ""
         viewModel._characters.postValue(ApiException.Success(viewModel.initialCharacterlist))
     }
 

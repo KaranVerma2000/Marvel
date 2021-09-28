@@ -31,6 +31,7 @@ class MarvelViewModel() : ViewModel() {
     var filteredComicList: ArrayList<Comics> = arrayListOf()
     var filter: Int = All
     var search: Boolean = false
+    var nameSearch: String = ""
 
 
     fun getCharacters() {
@@ -57,7 +58,7 @@ class MarvelViewModel() : ViewModel() {
         _characters.postValue(ApiException.Loading())
         viewModelScope.launch {
             try {
-                Log.d("search size", initialCharacterlist.size.toString())
+                Log.d("search size", changeCharacterlist.size.toString())
                 val result = repository.getNameCharacters(changeCharacterlist.size, name)
                 handleCharactersName(result)
             } catch (e: Exception) {
@@ -69,11 +70,10 @@ class MarvelViewModel() : ViewModel() {
 
     private fun handleCharactersName(result: Wrapper<Characters>) {
         val list = result.data.results
-        if (search) {
-            changeCharacterlist.clear()
-        }
         changeCharacterlist.addAll(list)
-        Log.d("TAG", list.toString())
+        Log.d(
+            "TAG", "${changeCharacterlist.size} ${list.toString()}"
+        )
         _characters.postValue(ApiException.Success(changeCharacterlist))
     }
 
